@@ -1,0 +1,10 @@
+# Exclude from Godot Asset Library ZIP (GitHub archive)
+README.md export-ignore
+CHANGELOG.md export-ignore
+CROPE2D.md export-ignore
+.editorconfig export-ignore
+.gitignore export-ignore
+.gitattributes export-ignore
+project.godot export-ignore
+export_presets.cfg export-ignore
+media/ export-ignore

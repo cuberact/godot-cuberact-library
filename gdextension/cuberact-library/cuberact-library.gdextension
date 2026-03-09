@@ -1,0 +1,11 @@
+[configuration]
+entry_symbol = "cuberact_library_entry"
+compatibility_minimum = "4.5"
+
+[libraries]
+macos = "./macos/cuberact-library.dylib"
+windows.x86_64 = "./windows/cuberact-library.x86_64.dll"
+windows.arm64 = "./windows/cuberact-library.arm64.dll"
+linux.x86_64 = "./linux/cuberact-library.x86_64.so"
+linux.arm64 = "./linux/cuberact-library.arm64.so"
+web.wasm32 = "./web/cuberact-library.wasm32.nothreads.wasm"

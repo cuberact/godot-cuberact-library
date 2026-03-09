@@ -1,0 +1,12 @@
+# Godot
+.godot/
+*.import
+*.uid
+*.translation
+export_presets.cfg
+
+# macOS
+.DS_Store
+
+# JetBrains
+.idea/

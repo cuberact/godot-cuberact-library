@@ -1,0 +1,86 @@
+[gd_scene format=3 uid="uid://dh6eeqh1j2w0c"]
+
+[ext_resource type="Script" uid="uid://drapr7wpsg5pn" path="res://cuberact-library-examples/commons/dev_tools.gd" id="1_xkl34"]
+[ext_resource type="Shader" uid="uid://dorss7pueva8r" path="res://cuberact-library-examples/commons/simple_shadows.gdshader" id="2_jhvu1"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_n7ser"]
+shader = ExtResource("2_jhvu1")
+shader_parameter/bg_color = Color(0.196, 0.196, 0.196, 1)
+shader_parameter/shadow_color = Color(0, 0, 0, 1)
+shader_parameter/offset = 0.01
+shader_parameter/soft = 0.45
+shader_parameter/blur_amount = 2.5
+
+[node name="DevTools" type="Node2D" unique_id=1078064928]
+z_index = 4095
+script = ExtResource("1_xkl34")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1413971020]
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer" unique_id=897262561]
+visible = false
+anchors_preset = 10
+anchor_right = 1.0
+offset_top = 30.0
+offset_right = -30.0
+offset_bottom = 155.0
+grow_horizontal = 2
+
+[node name="HintLabel" type="Label" parent="CanvasLayer"]
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -100.0
+offset_top = -60.0
+offset_right = -30.0
+offset_bottom = -30.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_colors/font_color = Color(1, 1, 1, 0.6)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.6)
+theme_override_constants/outline_size = 5
+theme_override_font_sizes/font_size = 28
+text = "F1"
+horizontal_alignment = 2
+vertical_alignment = 2
+
+[node name="ControlsOverlay" type="ColorRect" parent="CanvasLayer"]
+visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 0.85)
+
+[node name="CenterContainer" type="CenterContainer" parent="CanvasLayer/ControlsOverlay"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="ControlsGrid" type="GridContainer" parent="CanvasLayer/ControlsOverlay/CenterContainer"]
+layout_mode = 2
+theme_override_constants/h_separation = 40
+theme_override_constants/v_separation = 12
+columns = 2
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=1293871976]
+position = Vector2(1000, 1000)
+
+[node name="SimpleShadows" type="ColorRect" parent="." unique_id=1665533586]
+z_index = 4096
+z_as_relative = false
+material = SubResource("ShaderMaterial_n7ser")
+offset_left = -100.0
+offset_top = -100.0
+offset_right = 2100.0
+offset_bottom = 2100.0
+mouse_filter = 1
+color = Color(1, 1, 0.23921569, 0.33333334)

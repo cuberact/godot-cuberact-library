@@ -1,0 +1,22 @@
+[gd_scene format=3 uid="uid://bot73vrq55x85"]
+
+[ext_resource type="Script" uid="uid://cwyocxym6b6ib" path="res://cuberact-library-examples/commons/boulder.gd" id="1_50tbn"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_gcbom"]
+friction = 0.1
+bounce = 0.2
+
+[node name="Boulder" type="RigidBody2D" unique_id=1194396977]
+physics_material_override = SubResource("PhysicsMaterial_gcbom")
+can_sleep = false
+linear_damp = 0.1
+angular_damp = 0.1
+script = ExtResource("1_50tbn")
+boulder_seed = 2578953878
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="." unique_id=1280153702]
+polygon = PackedVector2Array(89.8588, 0, 72.41961, 53.197784, 40.357502, 80.28622, -34.15356, 83.11521, -80.23399, 40.461227, -89.751434, -4.3914747, -41.505344, -79.698875, 18.640963, -87.90403, 63.426365, -63.652973, 89.8588, 0)
+
+[node name="Polygon2D" type="Polygon2D" parent="." unique_id=484349167]
+color = Color(0.8288579, 0.16080952, 0.28282312, 1)
+polygon = PackedVector2Array(89.8588, 0, 72.41961, 53.197784, 40.357502, 80.28622, -34.15356, 83.11521, -80.23399, 40.461227, -89.751434, -4.3914747, -41.505344, -79.698875, 18.640963, -87.90403, 63.426365, -63.652973, 89.8588, 0)
