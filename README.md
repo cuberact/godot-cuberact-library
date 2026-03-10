@@ -87,6 +87,14 @@ Example scenes in `cuberact-library-examples/CRope2D/`, each demonstrating speci
 | 13 | <img src="cuberact-library-examples/CRope2D/screenshot/e13-stress_test.png" width="120"> | **Stress Test** | N ropes hanging from the ceiling — configurable count, length, and colors |
 | 14 | <img src="cuberact-library-examples/CRope2D/screenshot/e14-boulder_network.png" width="120"> | **Boulder Network** | Zero-gravity boulders connected by ropes — configurable count and gravity |
 
+### A Note on Scale
+
+The example scenes are deliberately built outside realistic physical proportions — ropes are extremely long (often 10–16 meters) and wide (15–20 cm). This was an intentional choice: exaggerated scale simply looks better in a presentation context and makes the physics behavior easier to observe.
+
+However, it also means the examples feel a bit like slow motion. The gravitational acceleration is a standard 980 px/s², but when a rope is 16 meters long, it naturally takes more time to swing — the physics are correct, the proportions are not.
+
+For a real game, pay attention to proper rope lengths and widths. Press F2 in any example to see the scale grid and get a sense of the actual dimensions involved.
+
 ### Scene Notes
 
 Observations, tips, and things to try in each example scene.
