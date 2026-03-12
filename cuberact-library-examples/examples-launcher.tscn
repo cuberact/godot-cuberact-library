@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://61e7tqhm5m1u"]
 
-[ext_resource type="Script" uid="uid://d1tp4viny5ey" path="res://cuberact-library-examples/cuberact-examples-launcher.gd" id="1_script"]
+[ext_resource type="Script" uid="uid://d1tp4viny5ey" path="res://cuberact-library-examples/examples-launcher.gd" id="1_script"]
 [ext_resource type="Texture2D" uid="uid://c80bwvq2pyc2d" path="res://cuberact-library-examples/commons/cuberact.png" id="2_ytr8w"]
 
 [node name="Launcher" type="Control" unique_id=891824107]

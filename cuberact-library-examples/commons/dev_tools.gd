@@ -260,7 +260,7 @@ func _handle_keyboard(event: InputEventKey) -> void:
 			controls_overlay.visible = false
 			_hint_panel.visible = true
 		else:
-			get_tree().change_scene_to_file("res://cuberact-library-examples/cuberact-examples-launcher.tscn")
+			get_tree().change_scene_to_file("res://cuberact-library-examples/examples-launcher.tscn")
 	elif event.keycode == KEY_R:
 		_reset_camera()
 
