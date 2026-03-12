@@ -233,8 +233,10 @@ All example scenes include a `DevTools` node providing camera and interaction co
 
 [![Ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/cuberact)
 
+- **News and updates:** [X / Twitter](https://x.com/cuberact)
 - **Bug reports and feature requests:** [GitHub Issues](https://github.com/cuberact/godot-cuberact-library/issues)
 - **Questions and discussion:** Comments on the [itch.io page](https://cuberact.itch.io/cuberact-library)
+- **Devlogs and demos:** [YouTube](https://www.youtube.com/@Cuberact)
 
 ## License
 
