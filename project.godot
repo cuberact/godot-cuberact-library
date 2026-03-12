@@ -30,6 +30,12 @@ window/stretch/mode="canvas_items"
 
 enabled=PackedStringArray()
 
+[file_customization]
+
+folder_colors={
+"res://addons/cuberact-library/": "yellow"
+}
+
 [physics]
 
 common/enable_object_picking=false

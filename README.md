@@ -9,7 +9,7 @@ Check the installed version at runtime: `CuberactLib.get_version()`
 ## Requirements
 
 - **Godot 4.5+** (tested with 4.6)
-- Pre-built native library in `gdextension/cuberact-library/` (all platforms included)
+- Pre-built native library in `addons/cuberact-library/` (all platforms included)
 
 ## Supported Platforms
 
@@ -29,11 +29,11 @@ Install directly from the Godot editor's AssetLib tab. This adds both the librar
 ### Option B — GitHub Release (library only)
 
 1. Download the latest ZIP from [Releases](https://github.com/cuberact/godot-cuberact-library/releases/latest)
-2. Extract `cuberact-library/` into your project's `gdextension/` folder:
+2. Extract `cuberact-library/` into your project's `addons/` folder:
 
 ```
 your-project/
-├── gdextension/
+├── addons/
 │   └── cuberact-library/
 │       ├── cuberact-library.gdextension
 │       ├── LICENCE.md
@@ -218,7 +218,7 @@ All example scenes include a `DevTools` node providing camera and interaction co
 ## Project Structure
 
 ```
-├── gdextension/                              Library binaries (keep in your project)
+├── addons/                                   Library binaries (keep in your project)
 │   └── cuberact-library/
 ├── cuberact-library-examples/                Examples (delete when done exploring)
 │   ├── CRope2D/                              14 example scenes
@@ -238,4 +238,4 @@ All example scenes include a `DevTools` node providing camera and interaction co
 
 ## License
 
-Free for learning, prototyping, and game jams. A paid license is required when you publish a game. See [LICENSE.md](gdextension/cuberact-library/LICENSE.md) for full terms.
+Free for learning, prototyping, and game jams. A paid license is required when you publish a game. See [LICENSE.md](addons/cuberact-library/LICENSE.md) for full terms.
