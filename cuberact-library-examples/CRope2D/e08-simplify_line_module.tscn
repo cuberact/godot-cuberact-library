@@ -1,0 +1,119 @@
+[gd_scene format=3 uid="uid://ceg01uktfbqoq"]
+
+[ext_resource type="PackedScene" uid="uid://dh6eeqh1j2w0c" path="res://cuberact-library-examples/commons/dev_tools.tscn" id="1_usy7r"]
+[ext_resource type="PackedScene" uid="uid://t78dg20gevgr" path="res://cuberact-library-examples/commons/walls.tscn" id="2_6u6b8"]
+[ext_resource type="PackedScene" uid="uid://c3acsyrmmguwe" path="res://cuberact-library-examples/commons/obstacle.tscn" id="3_6lneg"]
+[ext_resource type="PackedScene" uid="uid://bot73vrq55x85" path="res://cuberact-library-examples/commons/boulder.tscn" id="4_ubo7k"]
+
+[sub_resource type="CRopeAnchor" id="CRopeAnchor_ju4jw"]
+node_path = NodePath("../Anchor1")
+
+[sub_resource type="CRopeWorldGravityForceMod" id="CRopeWorldGravityForceMod_xg3wl"]
+
+[sub_resource type="CRopeDirectRenderMod" id="CRopeDirectRenderMod_e01h1"]
+width = 20.0
+
+[sub_resource type="CRopeDebugRenderMod" id="CRopeDebugRenderMod_75cny"]
+wake_color = Color(0.101960786, 0.101960786, 0.101960786, 0)
+draw_anchors = false
+anchor_radius = 20.0
+collision_width_color = Color(1, 1, 1, 1)
+draw_points = false
+point_size = 13.0
+
+[sub_resource type="CRopeData" id="CRopeData_d4q0d"]
+segment_length = 9.0
+compression_limit = 1.0
+points = PackedVector2Array(0, 0, 0, 9, 0, 18, 0, 27, 0, 36, 0, 45, 0, 54, 0, 63, 0, 72, 0, 81, 0, 90, 0, 99, 0, 108, 0, 116.99999, 0, 126, 0, 135, 0, 144, 0, 153, 0, 162, 0, 171, 0, 180, 0, 189, 0, 198, 0, 207, 0, 216, 0, 225, 0, 233.99998, 0, 243.00002, 0, 252, 0, 261, 0, 270, 0, 279, 0, 288, 0, 297, 0, 306, 0, 315, 0, 324, 0, 333, 0, 342, 0, 351, 0, 360, 0, 369, 0, 378, 0, 387, 0, 396, 0, 405, 0, 414, 0, 423, 0, 432, 0, 441, 0, 450, 0, 459, 0, 467.99997, 0, 476.99997, 0, 486.00003, 0, 495, 0, 504, 0, 513, 0, 522, 0, 531, 0, 540, 0, 549, 0, 558, 0, 567, 0, 576, 0, 585, 0, 594, 0, 603, 0, 612, 0, 621, 0, 630, 0, 639, 0, 648, 0, 657, 0, 666, 0, 675, 0, 684, 0, 693, 0, 702, 0, 711, 0, 720, 0, 729, 0, 738, 0, 747, 0, 756, 0, 765, 0, 774, 0, 783, 0, 792, 0, 801, 0, 810, 0, 819, 0, 828, 0, 837, 0, 846, 0, 855, 0, 864, 0, 873, 0, 882, 0, 891, 0, 900)
+prev_points = PackedVector2Array(0, 0, 0, 9, 0, 18, 0, 27, 0, 36, 0, 45, 0, 54, 0, 63, 0, 72, 0, 81, 0, 90, 0, 99, 0, 108, 0, 116.99999, 0, 126, 0, 135, 0, 144, 0, 153, 0, 162, 0, 171, 0, 180, 0, 189, 0, 198, 0, 207, 0, 216, 0, 225, 0, 233.99998, 0, 243.00002, 0, 252, 0, 261, 0, 270, 0, 279, 0, 288, 0, 297, 0, 306, 0, 315, 0, 324, 0, 333, 0, 342, 0, 351, 0, 360, 0, 369, 0, 378, 0, 387, 0, 396, 0, 405, 0, 414, 0, 423, 0, 432, 0, 441, 0, 450, 0, 459, 0, 467.99997, 0, 476.99997, 0, 486.00003, 0, 495, 0, 504, 0, 513, 0, 522, 0, 531, 0, 540, 0, 549, 0, 558, 0, 567, 0, 576, 0, 585, 0, 594, 0, 603, 0, 612, 0, 621, 0, 630, 0, 639, 0, 648, 0, 657, 0, 666, 0, 675, 0, 684, 0, 693, 0, 702, 0, 711, 0, 720, 0, 729, 0, 738, 0, 747, 0, 756, 0, 765, 0, 774, 0, 783, 0, 792, 0, 801, 0, 810, 0, 819, 0, 828, 0, 837, 0, 846, 0, 855, 0, 864, 0, 873, 0, 882, 0, 891, 0, 900)
+
+[sub_resource type="CRopeAnchor" id="CRopeAnchor_07y3e"]
+node_path = NodePath("../Anchor2")
+
+[sub_resource type="CRopeWorldGravityForceMod" id="CRopeWorldGravityForceMod_xrpwf"]
+
+[sub_resource type="CRopeSmoothLineMod" id="CRopeSmoothLineMod_k6d0b"]
+
+[sub_resource type="CRopeSimplifyLineMod" id="CRopeSimplifyLineMod_35k0i"]
+
+[sub_resource type="CRopeDirectRenderMod" id="CRopeDirectRenderMod_sqjxr"]
+width = 20.0
+
+[sub_resource type="CRopeDebugRenderMod" id="CRopeDebugRenderMod_vj465"]
+wake_color = Color(0.101960786, 0.101960786, 0.101960786, 0)
+draw_anchors = false
+anchor_radius = 20.0
+draw_points = false
+
+[sub_resource type="CRopeData" id="CRopeData_dgyu0"]
+segment_length = 9.0
+points = PackedVector2Array(0, 0, 0, 9, 0, 18, 0, 27, 0, 36, 0, 45, 0, 54, 0, 63, 0, 72, 0, 81, 0, 90, 0, 99, 0, 108, 0, 116.99999, 0, 126, 0, 135, 0, 144, 0, 153, 0, 162, 0, 171, 0, 180, 0, 189, 0, 198, 0, 207, 0, 216, 0, 225, 0, 233.99998, 0, 243.00002, 0, 252, 0, 261, 0, 270, 0, 279, 0, 288, 0, 297, 0, 306, 0, 315, 0, 324, 0, 333, 0, 342, 0, 351, 0, 360, 0, 369, 0, 378, 0, 387, 0, 396, 0, 405, 0, 414, 0, 423, 0, 432, 0, 441, 0, 450, 0, 459, 0, 467.99997, 0, 476.99997, 0, 486.00003, 0, 495, 0, 504, 0, 513, 0, 522, 0, 531, 0, 540, 0, 549, 0, 558, 0, 567, 0, 576, 0, 585, 0, 594, 0, 603, 0, 612, 0, 621, 0, 630, 0, 639, 0, 648, 0, 657, 0, 666, 0, 675, 0, 684, 0, 693, 0, 702, 0, 711, 0, 720, 0, 729, 0, 738, 0, 747, 0, 756, 0, 765, 0, 774, 0, 783, 0, 792, 0, 801, 0, 810, 0, 819, 0, 828, 0, 837, 0, 846, 0, 855, 0, 864, 0, 873, 0, 882, 0, 891, 0, 900)
+prev_points = PackedVector2Array(0, 0, 0, 9, 0, 18, 0, 27, 0, 36, 0, 45, 0, 54, 0, 63, 0, 72, 0, 81, 0, 90, 0, 99, 0, 108, 0, 116.99999, 0, 126, 0, 135, 0, 144, 0, 153, 0, 162, 0, 171, 0, 180, 0, 189, 0, 198, 0, 207, 0, 216, 0, 225, 0, 233.99998, 0, 243.00002, 0, 252, 0, 261, 0, 270, 0, 279, 0, 288, 0, 297, 0, 306, 0, 315, 0, 324, 0, 333, 0, 342, 0, 351, 0, 360, 0, 369, 0, 378, 0, 387, 0, 396, 0, 405, 0, 414, 0, 423, 0, 432, 0, 441, 0, 450, 0, 459, 0, 467.99997, 0, 476.99997, 0, 486.00003, 0, 495, 0, 504, 0, 513, 0, 522, 0, 531, 0, 540, 0, 549, 0, 558, 0, 567, 0, 576, 0, 585, 0, 594, 0, 603, 0, 612, 0, 621, 0, 630, 0, 639, 0, 648, 0, 657, 0, 666, 0, 675, 0, 684, 0, 693, 0, 702, 0, 711, 0, 720, 0, 729, 0, 738, 0, 747, 0, 756, 0, 765, 0, 774, 0, 783, 0, 792, 0, 801, 0, 810, 0, 819, 0, 828, 0, 837, 0, 846, 0, 855, 0, 864, 0, 873, 0, 882, 0, 891, 0, 900)
+
+[node name="e08-simplify_line_module" type="Node2D" unique_id=528624931]
+
+[node name="DevTools" parent="." unique_id=1078064928 node_paths=PackedStringArray("nodes_mouse_left", "nodes_mouse_right", "debug_ropes") instance=ExtResource("1_usy7r")]
+nodes_mouse_left = [NodePath("../Anchor1")]
+nodes_mouse_right = [NodePath("../Anchor2")]
+debug_ropes = [NodePath("../CRope2D_2")]
+
+[node name="Walls" parent="." unique_id=1111928691 instance=ExtResource("2_6u6b8")]
+
+[node name="Obstacle" parent="." unique_id=1866753442 instance=ExtResource("3_6lneg")]
+position = Vector2(950, 883)
+radius = 80.0
+rect_size = Vector2(500, 200)
+
+[node name="Boulder" parent="." unique_id=1194396977 instance=ExtResource("4_ubo7k")]
+position = Vector2(1139, 890)
+gravity_scale = 0.0
+boulder_seed = 1581409907
+
+[node name="Anchor1" type="Node2D" parent="." unique_id=675993158]
+position = Vector2(400, 80)
+
+[node name="lblOff" type="Label" parent="Anchor1" unique_id=1083205853]
+offset_left = -23.0
+offset_top = -58.0
+offset_right = 277.0
+offset_bottom = 23.0
+theme_override_font_sizes/font_size = 28
+text = "OFF"
+
+[node name="Anchor2" type="Node2D" parent="." unique_id=1087882972]
+position = Vector2(1600, 80)
+
+[node name="lblOn" type="Label" parent="Anchor2" unique_id=190265992]
+offset_left = -24.0
+offset_top = -49.0
+offset_right = 233.0
+offset_bottom = 32.0
+theme_override_font_sizes/font_size = 28
+text = "ON"
+
+[node name="CRope2D_1" type="CRope2D" parent="." unique_id=549483749]
+rope_path = PackedVector2Array(0, 0, 0, 900)
+collision_width = 20.0
+anchors = Array[CRopeAnchor]([SubResource("CRopeAnchor_ju4jw")])
+force_modules = Array[CRopeForceMod]([SubResource("CRopeWorldGravityForceMod_xg3wl")])
+render_modules = Array[CRopeRenderMod]([SubResource("CRopeDirectRenderMod_e01h1"), SubResource("CRopeDebugRenderMod_75cny")])
+data = SubResource("CRopeData_d4q0d")
+position = Vector2(400, 80)
+
+[node name="CRope2D_2" type="CRope2D" parent="." unique_id=186870905]
+rope_path = PackedVector2Array(0, 0, 0, 900)
+collision_width = 20.0
+anchors = Array[CRopeAnchor]([SubResource("CRopeAnchor_07y3e")])
+force_modules = Array[CRopeForceMod]([SubResource("CRopeWorldGravityForceMod_xrpwf")])
+line_modules = Array[CRopeLineMod]([SubResource("CRopeSmoothLineMod_k6d0b"), SubResource("CRopeSimplifyLineMod_35k0i")])
+render_modules = Array[CRopeRenderMod]([SubResource("CRopeDirectRenderMod_sqjxr"), SubResource("CRopeDebugRenderMod_vj465")])
+data = SubResource("CRopeData_dgyu0")
+position = Vector2(1600, 80)
+
+[node name="lblSimplify" type="Label" parent="." unique_id=610415461]
+offset_left = 20.0
+offset_top = 10.0
+offset_right = 388.0
+offset_bottom = 66.0
+theme_override_font_sizes/font_size = 28
+text = "SIMPLIFY"

@@ -1,0 +1,44 @@
+[gd_scene format=3 uid="uid://b1ngefgebc54m"]
+
+[ext_resource type="PackedScene" uid="uid://dh6eeqh1j2w0c" path="res://cuberact-library-examples/commons/dev_tools.tscn" id="1_jds65"]
+[ext_resource type="PackedScene" uid="uid://t78dg20gevgr" path="res://cuberact-library-examples/commons/walls.tscn" id="2_mq8xw"]
+[ext_resource type="Script" uid="uid://ckl3yr2s7jn1h" path="res://cuberact-library-examples/CRope2D/scripts/grappling_hook.gd" id="3_7xbtc"]
+[ext_resource type="PackedScene" uid="uid://c3acsyrmmguwe" path="res://cuberact-library-examples/commons/obstacle.tscn" id="5_3l51u"]
+[ext_resource type="PackedScene" uid="uid://bot73vrq55x85" path="res://cuberact-library-examples/commons/boulder.tscn" id="6_3tuiv"]
+[ext_resource type="Texture2D" uid="uid://c80bwvq2pyc2d" path="res://cuberact-library-examples/commons/cuberact.png" id="6_byq44"]
+
+[node name="e16-grappling_hook" type="Node2D" unique_id=555027929]
+
+[node name="DevTools" parent="." unique_id=1078064928 node_paths=PackedStringArray("nodes_mouse_left") instance=ExtResource("1_jds65")]
+nodes_mouse_left = [NodePath("../GrapplingHook")]
+
+[node name="Walls" parent="." unique_id=1111928691 instance=ExtResource("2_mq8xw")]
+
+[node name="Obstacle" parent="." unique_id=1866753442 instance=ExtResource("5_3l51u")]
+position = Vector2(1455, 385)
+radius = 80.0
+
+[node name="Boulder1" parent="." unique_id=1194396977 instance=ExtResource("6_3tuiv")]
+position = Vector2(971, 248)
+boulder_seed = 1729654649
+
+[node name="Boulder2" parent="." unique_id=1302228991 instance=ExtResource("6_3tuiv")]
+position = Vector2(1368, 583)
+gravity_scale = 0.0
+boulder_seed = 987940596
+
+[node name="Boulder3" parent="." unique_id=2079098852 instance=ExtResource("6_3tuiv")]
+position = Vector2(1524, 584)
+gravity_scale = 0.0
+boulder_seed = 239669130
+
+[node name="GrapplingHook" type="Node2D" parent="." unique_id=115873368]
+position = Vector2(588, 603)
+script = ExtResource("3_7xbtc")
+hook_radius = 0.1
+metadata/_custom_type_script = "uid://ckl3yr2s7jn1h"
+
+[node name="Cuberact" type="Sprite2D" parent="GrapplingHook" unique_id=1678454954]
+position = Vector2(-15, 0)
+scale = Vector2(0.24000001, 0.24000001)
+texture = ExtResource("6_byq44")

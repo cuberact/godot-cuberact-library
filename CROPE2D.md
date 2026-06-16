@@ -75,17 +75,31 @@ add_child(rope)
 
 The main simulation node. Points are stored in **local space** — you can freely move, rotate, and duplicate the node. The simulation runs in global space internally via temporary buffers.
 
-> **Scale caveat:** Scaling works visually, but `segment_length` is in local space and does not auto-adjust. Non-uniform or large scale factors may cause solver issues.
+> **Scale caveat:** CRope2D does not support scale. The constraint solver enforces `segment_length` in global (unscaled) space, so any scale on the node or its parents makes the simulated rope disagree with the authored local-space data. A warning is printed when a scaled rope enters the tree. Flips and rotations preserve lengths and are fully supported.
 
 ### Simulation Properties
 
 | Property | Type | Default | Range | Description |
 |----------|------|---------|-------|-------------|
 | `substeps` | int | 8 | 1–20 | Physics iterations per frame. Higher = more stable but slower. |
+| `solver_mode` | int | 0 | 0–1 | Constraint solver variant. 0 = Red-Black (up to 10× faster on long ropes, slightly more elastic), 1 = Sequential (stiffest result per iteration). |
 | `solver_iterations` | int | 1 | 1–100 | Constraint solver passes per substep. Higher = stiffer. |
-| `solver_bidirectional` | bool | true | — | Run solver both forward (0→N) and backward (N→0). Stabilizes longer ropes. |
-| `damping` | float | 0.4 | 0–1 | Velocity damping. 0 = bouncy, 1 = fully damped. |
+| `solver_bidirectional` | bool | true | — | Run solver both forward (0→N) and backward (N→0). Stabilizes longer ropes. Only used by the Sequential `solver_mode`. |
+| `damping` | float | 0.6 | 0–1 | Fraction of velocity removed per second. 0 = no damping, 0.6 = keep 40%/s, 1 = velocity removed instantly. Frame-rate independent. |
 | `stiffness` | float | 0.99 | 0.01–1 | Constraint correction strength. 0.01 = stretchy, 1.0 = rigid. |
+
+### Sleep Properties
+
+A settled rope skips the whole simulation and runs only a cheap watchdog until something disturbs it.
+
+| Property | Type | Default | Range | Description |
+|----------|------|---------|-------|-------------|
+| `sleep_enabled` | bool | true | — | Let a settled rope fall asleep and skip simulation. |
+| `sleep_tolerance` | float | 1.0 | 0–20 | Max distance (px) any point may drift from the reference snapshot while still counting as calm. |
+| `sleep_frames` | int | 60 | 1–600 | Consecutive calm frames required before falling asleep. |
+| `sleep_min_awake` | int | 5 | 1–600 | Min calm frames a rope stays awake after a watchdog wake before it may sleep again. |
+
+A sleeping rope wakes when its node (or a parent) moves, an anchor moves or is added/removed, accumulated forces change (wind, moving magnet), the data is modified, or a collider of any type (including `StaticBody2D` and `TileMap`) appears, moves, rotates or leaves inside the rope bounds. A rope that holds up a `RigidBody2D` on its own stays awake; one whose body is also supported by something else can sleep. Disable `sleep_enabled` for a rope whose hanging weight must be simulated continuously (e.g. a weighted pendulum).
 
 ### Collision Properties
 
@@ -95,9 +109,11 @@ The main simulation node. Points are stored in **local space** — you can freel
 | `collision_stride` | int | 3 | 1–16 | Resolve collisions every Nth substep from the end. Higher = faster, less precise. |
 | `collision_friction` | float | 0.01 | 0–1 | Surface friction. 0 = perfect sliding, 1 = full stop on contact. |
 | `collision_force` | float | 4000.0 | 0–10000 | Impulse applied to RigidBody2D colliders. |
-| `collision_force_pinched` | float | 600.0 | 0–10000 | Impulse when a point is squeezed between two colliders. |
+| `collision_force_pinched` | float | 0.0 | 0–10000 | Impulse when a point is squeezed between two colliders. `0` (default) disables pinch impulses. |
 | `collision_damping_range` | float | 20.0 | 1–100 | Distance range (px) over which depth-based damping ramps up. |
 | `collision_mask` | int | 1 | — | Physics layers to collide with. |
+
+**Collision behavior & `collision_stride`:** each rope point is treated as a circle (radius `collision_width / 2`); when it overlaps a collider, the point is pushed out. A natural limitation: sharp corners can push a point outward in a way that stretches the segment between two neighboring points, and the Verlet constraint solver then tries to shorten it back — a tug-of-war between collision resolution and distance constraints, most visible on acute edges. `collision_stride` manages this. The simulation runs multiple substeps per frame; integration and constraint solving happen every substep, but collision resolution does not have to. `collision_stride` controls how many substeps are skipped between collision passes (default 3), and the last substep always resolves collisions. With fewer passes the collision impulses are normalized so the total stays consistent. This lowers collision cost while giving the solver room to work without being constantly fought by collision pushback. Lower it toward 1 for ropes against sharp or fast-moving colliders.
 
 ### Module Arrays
 
@@ -124,6 +140,10 @@ The main simulation node. Points are stored in **local space** — you can freel
 | `simulate(delta)` | void | Run one simulation step. Called automatically in `_physics_process`. |
 | `break_at(index)` | void | Split rope at point index. Creates two new ropes, emits `broken`, destroys original. |
 | `duplicate_rope()` | CRope2D | Full independent copy (data, modules, anchors). Use instead of `Node.duplicate()`. |
+| `is_sleeping()` | bool | True while the rope is asleep (see Sleep Properties). |
+| `wake()` | void | Wake a sleeping rope and reset the calm-frame counter. Call after changes the watchdog can't detect (e.g. editing TileMap cells under the rope). |
+| `depenetrate_anchor_offset(anchor)` | void | One-shot: on the next `simulate()`, if the anchor overlaps a collider, permanently adjust its offset to sit on the collider surface. |
+| `depenetrate_all_anchor_offsets()` | void | Same as above, for every anchor on the rope. |
 | `save_data(path)` | Error | Save current data to `.tres` file. |
 | `enable_debug_probe()` | CRopeDebugProbe | Enable performance profiling. Returns probe with timing metrics. |
 | `disable_debug_probe()` | void | Disable profiling. |
@@ -132,7 +152,15 @@ The main simulation node. Points are stored in **local space** — you can freel
 
 **`broken(break_index: int, rope_a: CRope2D, rope_b: CRope2D)`**
 
-Emitted when the rope breaks. `rope_a` contains points 0 to `break_index`, `rope_b` contains points from `break_index + 1` to the end. The original rope is destroyed (`queue_free`) after emitting this signal.
+Emitted when the rope breaks. `rope_a` contains points 0 to `break_index`, `rope_b` contains points from `break_index + 1` to the end. Either side is `null` when it would consist of a single point, so check before use. The original rope is destroyed (`queue_free`) after emitting this signal.
+
+**`slept()`**
+
+Emitted when the rope falls asleep (see Sleep Properties).
+
+**`woken()`**
+
+Emitted when a sleeping rope wakes up, via the watchdog or `wake()`.
 
 ---
 
@@ -166,6 +194,7 @@ Stores rope point positions and simulation parameters. Serializable — saving p
 |--------|---------|-------------|
 | `get_count()` | int | Number of points. |
 | `is_valid()` | bool | True if ≥ 2 points and positive segment_length. |
+| `get_rect()` | Rect2 | Bounding box of the points in local space. Empty `Rect2` when there are no points. |
 | `align()` | void | Resize prev_points to match points (zero velocity for new entries). |
 | `resize(count)` | void | Resize all arrays. New points initialized to `Vector2(0, 0)`. |
 | `append(point, index)` | void | Add point at index (-1 = end). |
@@ -179,6 +208,7 @@ Stores rope point positions and simulation parameters. Serializable — saving p
 |--------|---------|-------------|
 | `get_global_points()` | PackedVector2Array | World-space positions. Empty before first `simulate()`. Not serialized. |
 | `get_prev_global_points()` | PackedVector2Array | Previous world-space positions. Empty before first `simulate()`. Not serialized. |
+| `get_global_count()` | int | Number of points in the global working buffers. Matches `get_count()` during simulation, 0 before the first `simulate()`. |
 
 ---
 
@@ -199,6 +229,7 @@ Attaches a rope point to a scene node. When the target is a RigidBody2D, the anc
 | `pull_strength` | float | 3000.0 | Force pulling RigidBody2D targets (0–10000). |
 | `pull_damping` | float | 0.5 | Damping on pull force (0–1). Higher = less oscillation. |
 | `pull_samples` | int | 2 | Rope segments averaged for pull direction (1–20). Higher = more stable. |
+| `collision_resolve` | bool | true | Auto-adjust the anchor each frame to avoid penetrating colliders. Disable when the anchor is intentionally placed on a surface to prevent jitter. |
 | `enabled` | bool | true | Active flag. Disabled anchors are ignored. |
 
 ### Methods
@@ -236,6 +267,10 @@ Applies constant gravity to all points.
 | Property | Type | Default | Description |
 |----------|------|---------|-------------|
 | `gravity` | Vector2 | (0, 980) | Gravity vector. |
+
+#### CRopeWorldGravityForceMod
+
+Applies the gravity of the rope's physics space, read fresh every frame. The rope follows the same gravity as physics bodies, including runtime changes via `PhysicsServer2D.area_set_param` (a change wakes a sleeping rope). Nothing to configure. Area2D gravity zones are not supported.
 
 #### CRopeWindForceMod
 
@@ -325,7 +360,8 @@ Draws directly into the rope's canvas item (no child nodes). Lightweight.
 | Property | Type | Default | Description |
 |----------|------|---------|-------------|
 | `width` | float | 10.0 px | Rope width. |
-| `color` | Color | (1, 0.4, 0) | Rope color. |
+| `color` | Color | (1, 0.4, 0) | Rope color (ignored if gradient is set). |
+| `gradient` | Gradient | — | Color gradient along the rope. Overrides `color`. |
 | `texture` | Texture2D | — | Optional texture. |
 | `joint_mode` | LineJointMode | Sharp | Joint style: Sharp, Bevel, Round. |
 | `begin_cap_mode` | LineCapMode | None | Start cap: None, Box, Round. |
@@ -358,7 +394,8 @@ Debug overlay for visualizing rope internals. All draw features can be toggled i
 
 | Feature | Toggle | Default | Visual |
 |---------|--------|---------|--------|
-| Debug Overlay | `draw_debug_overlay` | ✓ | Dark semi-transparent background |
+| Overlay | `draw_overlay` | ✓ | Rope silhouette in `wake_color` (dark), switches to `sleep_color` (blue) while the rope sleeps |
+| AABB | `draw_aabb` | ✗ | Bounding box outline of the rope points |
 | Simulation Points | `draw_points` | ✓ | Green dots |
 | Render Points | `draw_render_points` | ✓ | Cyan dots |
 | Anchors | `draw_anchors` | ✓ | Magenta circles |
@@ -429,13 +466,16 @@ func _check_break(data: CRopeData) -> int:
 		total_length += points[i].distance_to(points[i + 1])
 	if total_length / (data.segment_length * (count - 1)) < max_total_stretch:
 		return -1
-	# Find most stretched segment
-	var max_stretch: float = 0.0
+	# Find the most stressed point — average of its two adjacent segments.
+	# Measuring over segment pairs is stable regardless of how the constraint
+	# solver distributes points along a taut rope (the Red-Black solver
+	# settles into alternating segment lengths).
+	var max_stress: float = 0.0
 	var break_index: int = -1
 	for i in range(1, count - 2):
-		var seg_stretch := points[i].distance_to(points[i + 1]) / data.segment_length
-		if seg_stretch > max_stretch:
-			max_stretch = seg_stretch
+		var stress := points[i - 1].distance_to(points[i]) + points[i].distance_to(points[i + 1])
+		if stress > max_stress:
+			max_stress = stress
 			break_index = i
 	return break_index
 ```
@@ -481,7 +521,7 @@ More examples are available in `cuberact-library-examples/CRope2D/scripts/custom
 
 Each frame, `simulate(delta)` runs the following steps in order:
 
-1. **Anchor cache** — resolve node paths, compute anchor positions, apply collision correction to anchors
+1. **Anchor cache** — resolve node paths, compute anchor positions, apply collision correction to anchors. A sleeping rope runs only a cheap watchdog here and skips the rest of the frame until disturbed (see Sleep Properties).
 2. **Local → Global transform** — transform points from local to global space for simulation
 3. **Force modules** — all force modules contribute to a shared forces array
 4. **Prepare collisions** — broadphase AABB query marks points near colliders
@@ -491,8 +531,8 @@ Each frame, `simulate(delta)` runs the following steps in order:
    - **Resolve collisions** — every `collision_stride`-th substep: push points out of colliders, apply friction, detect pinch
 6. **Rope sections** — group rope between anchors, calculate tension per section
 7. **Anchor pull** — reaction forces on RigidBody2D anchors based on section tension
-8. **Break modules** — break modules evaluate conditions, potentially split the rope
-9. **Global → Local transform** — transform points from global back to local space
+8. **Global → Local transform** — transform points from global back to local space
+9. **Break modules** — evaluate break conditions on current-frame local data; on a break the remaining steps are skipped
 10. **Line modules** — line modules transform render points (smooth, simplify, etc.)
 11. **Render modules** — render modules draw the final visual
 
@@ -525,7 +565,7 @@ Performance profiling object returned by `CRope2D.enable_debug_probe()`. All tim
 
 | Property | Description |
 |----------|-------------|
-| `collision_count` | Total collision checks performed. |
-| `collision_query_count` | Physics queries issued. |
-| `collision_active_count` | Points actively colliding. |
-| `render_point_count` | Points passed to renderers (after line processing). |
+| `collision_count` | Collisions detected per frame. |
+| `collision_queries_count` | Physics queries issued per frame. |
+| `collision_points_count` | Points marked collision-active by the broadphase. |
+| `render_points_count` | Points passed to renderers (after line processing). |

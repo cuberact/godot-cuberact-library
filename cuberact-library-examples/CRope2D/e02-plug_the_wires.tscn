@@ -1,0 +1,16 @@
+[gd_scene format=3 uid="uid://dt7fi37jrkt0g"]
+
+[ext_resource type="PackedScene" uid="uid://dh6eeqh1j2w0c" path="res://cuberact-library-examples/commons/dev_tools.tscn" id="1_dev"]
+[ext_resource type="PackedScene" uid="uid://t78dg20gevgr" path="res://cuberact-library-examples/commons/walls.tscn" id="2_walls"]
+[ext_resource type="Script" uid="uid://da5sa5tygmefv" path="res://cuberact-library-examples/CRope2D/scripts/plug_the_wires.gd" id="3_script"]
+
+[node name="e20-plug_the_wires" type="Node2D" unique_id=1141091463]
+script = ExtResource("3_script")
+
+[node name="Workshop" type="Polygon2D" parent="." unique_id=1559890885]
+polygon = PackedVector2Array(-20, -20, 1940, -20, 1940, 1100, -20, 1100)
+vertex_colors = PackedColorArray(0.1, 0.1, 0.12, 1, 0.1, 0.1, 0.12, 1, 0.16, 0.15, 0.17, 1, 0.16, 0.15, 0.17, 1)
+
+[node name="DevTools" parent="." unique_id=1040088487 instance=ExtResource("1_dev")]
+
+[node name="Walls" parent="." unique_id=1232411249 instance=ExtResource("2_walls")]

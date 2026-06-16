@@ -57,25 +57,25 @@ func _rebuild() -> void:
 	move_child(visual, -1)
 
 func _build_circle() -> void:
-	var shape = CircleShape2D.new()
+	var shape := CircleShape2D.new()
 	shape.radius = radius
-	var col = CollisionShape2D.new()
+	var col := CollisionShape2D.new()
 	col.shape = shape
 	add_child(col)
-	var points = PackedVector2Array()
-	var segments = clampi(int(radius), 16, 100)
+	var points := PackedVector2Array()
+	var segments := clampi(int(radius), 16, 100)
 	for i in segments:
-		var angle = TAU * i / segments
+		var angle := TAU * i / segments
 		points.append(Vector2(cos(angle), sin(angle)) * radius)
 	visual.polygon = points
 
 func _build_rect() -> void:
-	var shape = RectangleShape2D.new()
+	var shape := RectangleShape2D.new()
 	shape.size = rect_size
-	var col = CollisionShape2D.new()
+	var col := CollisionShape2D.new()
 	col.shape = shape
 	add_child(col)
-	var half = rect_size / 2.0
+	var half := rect_size / 2.0
 	visual.polygon = PackedVector2Array([
 		Vector2(-half.x, -half.y),
 		Vector2(half.x, -half.y),
@@ -84,7 +84,7 @@ func _build_rect() -> void:
 	])
 
 func _build_polygon() -> void:
-	var col = CollisionPolygon2D.new()
+	var col := CollisionPolygon2D.new()
 	col.polygon = polygon
 	add_child(col)
 	visual.polygon = polygon

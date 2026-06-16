@@ -1,0 +1,34 @@
+[gd_scene format=3 uid="uid://gjjvqtq7lvyk"]
+
+[ext_resource type="PackedScene" uid="uid://dh6eeqh1j2w0c" path="res://cuberact-library-examples/commons/dev_tools.tscn" id="1_dev"]
+[ext_resource type="PackedScene" uid="uid://t78dg20gevgr" path="res://cuberact-library-examples/commons/walls.tscn" id="2_walls"]
+[ext_resource type="Script" uid="uid://yj62u36bx7i7" path="res://cuberact-library-examples/CRope2D/scripts/jellyfish.gd" id="3_script"]
+
+[node name="e01-jellyfish" type="Node2D" unique_id=1856426413]
+script = ExtResource("3_script")
+vignette_on = false
+
+[node name="Water" type="Polygon2D" parent="." unique_id=417308973]
+polygon = PackedVector2Array(-20, -20, 1940, -20, 1940, 1100, -20, 1100)
+vertex_colors = PackedColorArray(0.03, 0.04, 0.11, 1, 0.03, 0.04, 0.11, 1, 0.03, 0.11, 0.15, 1, 0.03, 0.11, 0.15, 1)
+
+[node name="Bubbles" type="CPUParticles2D" parent="." unique_id=935817617]
+position = Vector2(960, 0)
+amount = 1000
+lifetime = 20.0
+preprocess = 28.0
+speed_scale = 0.1
+randomness = 0.4
+emission_shape = 3
+emission_rect_extents = Vector2(970, 10)
+direction = Vector2(0, 1)
+spread = 8.0
+gravity = Vector2(0, 4)
+initial_velocity_min = 5.0
+initial_velocity_max = 16.0
+scale_amount_max = 3.0
+color = Color(0.75, 0.92, 1, 0.14)
+
+[node name="DevTools" parent="." unique_id=547379703 instance=ExtResource("1_dev")]
+
+[node name="Walls" parent="." unique_id=1168601048 instance=ExtResource("2_walls")]

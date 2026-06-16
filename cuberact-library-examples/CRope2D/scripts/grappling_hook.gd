@@ -1,30 +1,23 @@
 @tool
 class_name GrapplingHook
 extends Node2D
-## Grappling hook that dynamically creates and manages rope segments.
-## Creates CRope2D instances programmatically with configurable modules.
+## Grappling hook. Shoots a hook toward the mouse, then lets you retract the
+## rope or cut it and leave it hanging. Builds and trims CRope2D data at runtime.
 
-#region Signals
 signal hook_attached(position: Vector2)
 signal hook_retracted
 signal hook_cut
-#endregion
 
-#region Exports
 @export_flags_2d_physics var target_mask: int = 1
 @export var hook_radius: float = 10.0
 @export var shoot_impulse_multiplier: float = 4.0
 ## Frames between removing one segment during retraction
 @export var retract_interval: int = 1
-#endregion
 
-#region State
 enum State { IDLE, SHOOTING, ATTACHED, RETRACTING }
 var _state: State = State.IDLE
 var _retract_counter: int = 0
-#endregion
 
-#region Private Variables
 var _rope: CRope2D
 var _hook_body: RigidBody2D
 var _anchor_hook: CRopeAnchor
@@ -32,14 +25,13 @@ var _anchor_player: CRopeAnchor
 var _anchor_target: CRopeAnchor
 var _rope_container: Node2D
 var _dev_tools: Node
-#endregion
+var _last_hue: float = randf()
 
-#region Lifecycle
 func _ready() -> void:
 	if Engine.is_editor_hint():
 		return
 	_create_rope_container()
-	_dev_tools = _find_dev_tools()
+	_dev_tools = get_parent().get_node_or_null("DevTools")
 	if _dev_tools:
 		_dev_tools.add_controls_entries([
 			["Space", "shoot rope towards mouse"],
@@ -72,9 +64,7 @@ func _unhandled_input(event: InputEvent) -> void:
 			KEY_C:
 				if _state == State.ATTACHED:
 					cut()
-#endregion
 
-#region Public API
 ## Shoots the hook in the given direction. Direction length affects impulse strength.
 func shoot(direction: Vector2) -> void:
 	if _state != State.IDLE:
@@ -94,7 +84,6 @@ func shoot(direction: Vector2) -> void:
 func retract() -> void:
 	if _state != State.ATTACHED:
 		return
-	# Remove target anchor (index 0), keep only player anchor
 	if _anchor_target:
 		_rope.anchors = [_anchor_player]
 		_anchor_target = null
@@ -105,14 +94,12 @@ func retract() -> void:
 func cut() -> void:
 	if _state != State.ATTACHED:
 		return
-	# Remove player anchor, keep target anchor
 	if _anchor_player:
 		var anchors := _rope.anchors.duplicate()
 		var idx := anchors.find(_anchor_player)
 		if idx >= 0:
 			anchors.remove_at(idx)
 		_rope.anchors = anchors
-	# Detach from rope - it stays in scene on its own
 	_rope = null
 	_anchor_hook = null
 	_anchor_player = null
@@ -134,9 +121,7 @@ func release() -> void:
 	_anchor_target = null
 	_state = State.IDLE
 	hook_retracted.emit()
-#endregion
 
-#region Private Methods - Rope Creation
 func _create_rope_container() -> void:
 	_rope_container = Node2D.new()
 	_rope_container.name = "RopeContainer"
@@ -152,19 +137,18 @@ func _create_rope() -> CRope2D:
 	var rope := CRope2D.new()
 	rope.substeps = 6
 	rope.collision_width = 20.0
-	# Forces
-	var gravity := CRopeGravityForceMod.new()
-	gravity.gravity = Vector2(0.0, 980.0)
+	var gravity := CRopeWorldGravityForceMod.new()
 	rope.force_modules = [gravity]
-	# Line modules
 	var smooth := CRopeSmoothLineMod.new()
 	var simplify := CRopeSimplifyLineMod.new()
 	rope.line_modules = [smooth, simplify]
-	# Render module
 	var renderer := CRopeDirectRenderMod.new()
 	renderer.width = 20.0
-	rope.render_modules = [renderer]
-	# Material with shader and random pastel colors
+	var debug_renderer := CRopeDebugRenderMod.new()
+	debug_renderer.set_all_draws(false)
+	debug_renderer.draw_overlay = true
+	debug_renderer.wake_color = Color.from_rgba8(0, 0, 0, 0)
+	rope.render_modules = [renderer, debug_renderer]
 	var mat := ShaderMaterial.new()
 	mat.shader = load("res://cuberact-library-examples/commons/rope.gdshader")
 	var base_color := _generate_random_pastel()
@@ -173,9 +157,7 @@ func _create_rope() -> CRope2D:
 	mat.set_shader_parameter("rope_color2", base_color)
 	rope.material = mat
 	return rope
-#endregion
 
-#region Private Methods - State Processing
 func _process_shooting() -> void:
 	_extend_rope_towards_player()
 	var collision := _check_hook_collision()
@@ -187,16 +169,13 @@ func _process_retracting() -> void:
 	_shorten_rope_from_player()
 	if _rope.data.get_count() <= 2:
 		release()
-#endregion
 
-#region Private Methods - Rope Management
 func _setup_rope_for_shooting(direction: Vector2) -> void:
 	var seg_len := _rope.collision_width
 	_rope.data.clear()
 	_rope.data.append(_hook_body.global_position)
 	_rope.data.append(global_position)
 	_rope.data.segment_length = seg_len
-	# Create hook anchor (index 0)
 	_anchor_hook = CRopeAnchor.new()
 	_anchor_hook.index = 0
 	_anchor_hook.node_path = _rope.get_path_to(_hook_body)
@@ -212,16 +191,14 @@ func _extend_rope_towards_player() -> void:
 	var seg_len := _rope.collision_width
 	var last_index := _rope.data.get_count() - 1
 	var last_pos := _rope.data.points[last_index]
-	# Add segments at the end towards player
 	while last_pos.distance_to(global_position) > seg_len:
 		var dir_to_player := (global_position - last_pos).normalized()
 		var new_pos := last_pos + dir_to_player * seg_len
-		_rope.data.append(new_pos)  # Append at end
+		_rope.data.append(new_pos)
 		last_index = _rope.data.get_count() - 1
 		last_pos = _rope.data.points[last_index]
 
 func _shorten_rope_from_player() -> void:
-	# Remove one segment every retract_interval frames
 	_retract_counter += 1
 	if _retract_counter < retract_interval:
 		return
@@ -231,9 +208,7 @@ func _shorten_rope_from_player() -> void:
 	_rope.data.remove()
 	if _anchor_player:
 		_anchor_player.index = _rope.data.get_count() - 1
-#endregion
 
-#region Private Methods - Hook
 func _check_hook_collision() -> Dictionary:
 	if not _hook_body:
 		return {}
@@ -255,19 +230,15 @@ func _attach_hook(collision: Dictionary) -> void:
 		return
 	var hit_position := _hook_body.global_position
 	var collider: Node2D = collision.collider
-	# Remove hook body
 	_hook_body.queue_free()
 	_hook_body = null
-	# Extend rope to player to match actual rope length (preserve shape)
 	_extend_rope_to_relaxed()
-	# Create target anchor (index 0) on the collided object
 	_anchor_target = CRopeAnchor.new()
 	_anchor_target.index = 0
 	_anchor_target.node_path = _rope.get_path_to(collider)
 	var target_offset := collider.to_local(hit_position)
 	_anchor_target.offset_angle = rad_to_deg(atan2(target_offset.y, target_offset.x))
 	_anchor_target.offset_distance = target_offset.length()
-	# Create player anchor (last index)
 	_anchor_player = CRopeAnchor.new()
 	_anchor_player.index = _rope.data.get_count() - 1
 	_anchor_player.node_path = _rope.get_path_to(self)
@@ -278,13 +249,10 @@ func _attach_hook(collision: Dictionary) -> void:
 
 func _extend_rope_to_relaxed() -> void:
 	var seg_len := _rope.collision_width
-	# Calculate actual rope length (sum of distances between points)
 	var actual_length := 0.0
 	for i in range(_rope.data.get_count() - 1):
 		actual_length += _rope.data.points[i].distance_to(_rope.data.points[i + 1])
-	# Calculate relaxed length
 	var relaxed_length := (_rope.data.get_count() - 1) * seg_len
-	# If rope is stretched, add segments at the end towards player
 	while relaxed_length < actual_length:
 		var last_index := _rope.data.get_count() - 1
 		var last_pos: Vector2 = _rope.data.points[last_index]
@@ -306,20 +274,9 @@ func _create_hook_body() -> RigidBody2D:
 	coll.shape = shape
 	body.add_child(coll)
 	return body
-#endregion
 
-#region Private Methods - Helpers
 func _get_shoot_direction() -> Vector2:
 	return get_global_mouse_position() - global_position
-
-func _find_dev_tools() -> Node:
-	var parent := get_parent()
-	if not parent:
-		return null
-	var dt := parent.get_node_or_null("DevTools")
-	if dt and dt.get("debug_ropes") != null:
-		return dt
-	return null
 
 func _register_rope(rope: CRope2D) -> void:
 	if _dev_tools:
@@ -329,11 +286,8 @@ func _unregister_rope(rope: CRope2D) -> void:
 	if _dev_tools:
 		_dev_tools.unregister_debug_rope(rope)
 
-var _last_hue: float = randf()
 func _generate_random_pastel() -> Color:
-	# Use golden ratio to spread hues evenly across spectrum
 	_last_hue = fmod(_last_hue + 0.618033988749895, 1.0)
 	var saturation := randf_range(0.4, 0.6)
 	var value := randf_range(0.85, 0.95)
 	return Color.from_hsv(_last_hue, saturation, value)
-#endregion

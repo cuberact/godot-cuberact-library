@@ -1,0 +1,22 @@
+[gd_scene format=3 uid="uid://tbr7dtwaex6w"]
+
+[ext_resource type="PackedScene" uid="uid://dh6eeqh1j2w0c" path="res://cuberact-library-examples/commons/dev_tools.tscn" id="1_dev"]
+[ext_resource type="PackedScene" uid="uid://t78dg20gevgr" path="res://cuberact-library-examples/commons/walls.tscn" id="2_walls"]
+[ext_resource type="Script" uid="uid://drisyhk6661ax" path="res://cuberact-library-examples/CRope2D/scripts/kite.gd" id="3_script"]
+[ext_resource type="PackedScene" uid="uid://c3acsyrmmguwe" path="res://cuberact-library-examples/commons/obstacle.tscn" id="4_obstacle"]
+
+[node name="e02-kite" type="Node2D" unique_id=831958368]
+script = ExtResource("3_script")
+
+[node name="Sky" type="Polygon2D" parent="." unique_id=572905657]
+polygon = PackedVector2Array(-20, -20, 1940, -20, 1940, 1100, -20, 1100)
+vertex_colors = PackedColorArray(0.4, 0.65, 0.92, 1, 0.4, 0.65, 0.92, 1, 0.82, 0.9, 0.96, 1, 0.82, 0.9, 0.96, 1)
+
+[node name="DevTools" parent="." unique_id=128692269 instance=ExtResource("1_dev")]
+
+[node name="Walls" parent="." unique_id=1418522523 instance=ExtResource("2_walls")]
+
+[node name="Ground" parent="." unique_id=2068941595 groups=["no_drag"] instance=ExtResource("4_obstacle")]
+position = Vector2(960, 1059)
+type = 1
+rect_size = Vector2(1960, 120)

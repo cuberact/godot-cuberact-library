@@ -1,0 +1,29 @@
+[gd_scene format=3 uid="uid://c078euupp1cld"]
+
+[ext_resource type="PackedScene" uid="uid://dh6eeqh1j2w0c" path="res://cuberact-library-examples/commons/dev_tools.tscn" id="1_dev"]
+[ext_resource type="PackedScene" uid="uid://t78dg20gevgr" path="res://cuberact-library-examples/commons/walls.tscn" id="2_walls"]
+[ext_resource type="Script" uid="uid://bem38iyc02flj" path="res://cuberact-library-examples/CRope2D/scripts/grand_curtain.gd" id="3_script"]
+[ext_resource type="Texture2D" uid="uid://c80bwvq2pyc2d" path="res://cuberact-library-examples/commons/cuberact.png" id="4_logo"]
+
+[node name="e21-grand_curtain" type="Node2D" unique_id=581115372]
+script = ExtResource("3_script")
+
+[node name="Stage" type="Polygon2D" parent="." unique_id=1592691229]
+polygon = PackedVector2Array(-20, -20, 1940, -20, 1940, 1100, -20, 1100)
+vertex_colors = PackedColorArray(0.03, 0.02, 0.04, 1, 0.03, 0.02, 0.04, 1, 0.08, 0.06, 0.08, 1, 0.08, 0.06, 0.08, 1)
+
+[node name="Floor" type="Polygon2D" parent="." unique_id=2132566485]
+color = Color(0.16, 0.11, 0.08, 1)
+polygon = PackedVector2Array(-20, 983, 1940, 983, 1940, 1100, -20, 1100)
+
+[node name="Logo" type="Sprite2D" parent="." unique_id=1451043747]
+position = Vector2(960, 529)
+texture = ExtResource("4_logo")
+
+[node name="Proscenium" type="Polygon2D" parent="." unique_id=1004876550]
+color = Color(0.3232516, 0.19603974, 0.047696553, 1)
+polygon = PackedVector2Array(-20, 0, 1940, 0, 1940, 81, -20, 81)
+
+[node name="DevTools" parent="." unique_id=857417674 instance=ExtResource("1_dev")]
+
+[node name="Walls" parent="." unique_id=946863654 instance=ExtResource("2_walls")]

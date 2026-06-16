@@ -21,21 +21,19 @@ script = ExtResource("1_xkl34")
 visible = false
 anchors_preset = 10
 anchor_right = 1.0
-offset_top = 30.0
-offset_right = -30.0
+offset_top = 0.0
+offset_right = 0.0
 offset_bottom = 155.0
 grow_horizontal = 2
 
-[node name="HintLabel" type="Label" parent="CanvasLayer"]
+[node name="HintLabel" type="Label" parent="CanvasLayer" unique_id=1238702480]
 anchors_preset = 3
 anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -100.0
-offset_top = -60.0
-offset_right = -30.0
-offset_bottom = -30.0
+offset_left = -70.0
+offset_top = -39.0
 grow_horizontal = 0
 grow_vertical = 0
 theme_override_colors/font_color = Color(1, 1, 1, 0.6)
@@ -46,7 +44,7 @@ text = "F1"
 horizontal_alignment = 2
 vertical_alignment = 2
 
-[node name="ControlsOverlay" type="ColorRect" parent="CanvasLayer"]
+[node name="ControlsOverlay" type="ColorRect" parent="CanvasLayer" unique_id=728372458]
 visible = false
 anchors_preset = 15
 anchor_right = 1.0
@@ -56,7 +54,7 @@ grow_vertical = 2
 mouse_filter = 2
 color = Color(0, 0, 0, 0.85)
 
-[node name="CenterContainer" type="CenterContainer" parent="CanvasLayer/ControlsOverlay"]
+[node name="CenterContainer" type="CenterContainer" parent="CanvasLayer/ControlsOverlay" unique_id=880157680]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -65,14 +63,14 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="ControlsGrid" type="GridContainer" parent="CanvasLayer/ControlsOverlay/CenterContainer"]
+[node name="ControlsGrid" type="GridContainer" parent="CanvasLayer/ControlsOverlay/CenterContainer" unique_id=1753836733]
 layout_mode = 2
 theme_override_constants/h_separation = 40
 theme_override_constants/v_separation = 12
 columns = 2
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=1293871976]
-position = Vector2(1000, 1000)
+position = Vector2(960, 540)
 
 [node name="SimpleShadows" type="ColorRect" parent="." unique_id=1665533586]
 z_index = 4096
@@ -80,7 +78,7 @@ z_as_relative = false
 material = SubResource("ShaderMaterial_n7ser")
 offset_left = -100.0
 offset_top = -100.0
-offset_right = 2100.0
-offset_bottom = 2100.0
+offset_right = 2020.0
+offset_bottom = 1180.0
 mouse_filter = 1
 color = Color(1, 1, 0.23921569, 0.33333334)

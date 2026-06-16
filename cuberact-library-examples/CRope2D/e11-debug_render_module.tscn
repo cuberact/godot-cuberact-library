@@ -1,0 +1,82 @@
+[gd_scene format=3 uid="uid://cq50eigkum13i"]
+
+[ext_resource type="PackedScene" uid="uid://dh6eeqh1j2w0c" path="res://cuberact-library-examples/commons/dev_tools.tscn" id="1_erle5"]
+[ext_resource type="PackedScene" uid="uid://t78dg20gevgr" path="res://cuberact-library-examples/commons/walls.tscn" id="2_ysm16"]
+[ext_resource type="PackedScene" uid="uid://bot73vrq55x85" path="res://cuberact-library-examples/commons/boulder.tscn" id="3_486oo"]
+[ext_resource type="PackedScene" uid="uid://c3acsyrmmguwe" path="res://cuberact-library-examples/commons/obstacle.tscn" id="3_jjy6d"]
+[ext_resource type="Shader" uid="uid://b4y2rv2wxw5x8" path="res://cuberact-library-examples/commons/rope.gdshader" id="4_bsuts"]
+
+[sub_resource type="CRopeAnchor" id="CRopeAnchor_lmlp1"]
+node_path = NodePath("../Anchor1")
+
+[sub_resource type="CRopeAnchor" id="CRopeAnchor_lvni1"]
+index = 200
+node_path = NodePath("../Anchor2")
+
+[sub_resource type="CRopeWorldGravityForceMod" id="CRopeWorldGravityForceMod_u8fse"]
+
+[sub_resource type="CRopeSmoothLineMod" id="CRopeSmoothLineMod_8chim"]
+
+[sub_resource type="CRopeSimplifyLineMod" id="CRopeSimplifyLineMod_5tiu1"]
+
+[sub_resource type="CRopeDirectRenderMod" id="CRopeDirectRenderMod_so3ii"]
+width = 20.0
+
+[sub_resource type="CRopeDebugRenderMod" id="CRopeDebugRenderMod_tkmbw"]
+draw_tension = true
+anchor_radius = 20.0
+draw_collision_width = true
+draw_forces = true
+draw_velocity = true
+render_point_size = 16.0
+
+[sub_resource type="CRopeData" id="CRopeData_jyku3"]
+segment_length = 19.36
+points = PackedVector2Array(0, 0, 8.8, 0, 17.6, 0, 26.400002, 0, 35.2, 0, 44, 0, 52.8, 0, 61.6, 0, 70.4, 0, 79.200005, 0, 88.00001, 0, 96.80001, 0, 105.60001, 0, 114.400024, 0, 123.20001, 0, 132.00002, 0, 140.80002, 0, 149.60002, 0, 158.40002, 0, 167.20003, 0, 176.00003, 0, 184.80003, 0, 193.60004, 0, 202.40004, 0, 211.20004, 0, 220.00005, 0, 228.80005, 0, 237.60007, 0, 246.40005, 0, 255.20004, 0, 264.00006, 0, 272.80005, 0, 281.60004, 0, 290.40002, 0, 299.2, 0, 308, 0, 316.8, 0, 325.59998, 0, 334.39996, 0, 343.19995, 0, 351.99994, 0, 360.79993, 0, 369.5999, 0, 378.3999, 0, 387.1999, 0, 395.99988, 0, 404.79987, 0, 413.59985, 0, 422.39984, 0, 431.19983, 0, 439.99982, 0, 448.79977, 0, 457.59976, 0, 466.39978, 0, 475.19977, 0, 483.99976, 0, 492.79974, 0, 501.59973, 0, 510.39972, 0, 519.1997, 0, 527.9997, 0, 536.7997, 0, 545.5997, 0, 554.39966, 0, 563.19965, 0, 571.99963, 0, 580.7996, 0, 589.5996, 0, 598.3996, 0, 607.1996, 0, 615.9996, 0, 624.79956, 0, 633.59955, 0, 642.39954, 0, 651.1995, 0, 659.9995, 0, 668.7995, 0, 677.5995, 0, 686.3995, 0, 695.19946, 0, 703.99945, 0, 712.79944, 0, 721.5994, 0, 730.3994, 0, 739.1994, 0, 747.9994, 0, 756.7994, 0, 765.59937, 0, 774.39935, 0, 783.19934, 0, 791.9993, 0, 800.7993, 0, 809.5993, 0, 818.3993, 0, 827.1993, 0, 835.99927, 0, 844.79926, 0, 853.59924, 0, 862.39923, 0, 871.1992, 0, 879.9992, 0, 888.79913, 0, 897.5991, 0, 906.3991, 0, 915.1991, 0, 923.99915, 0, 932.79913, 0, 941.5991, 0, 950.3991, 0, 959.1991, 0, 967.9991, 0, 976.7991, 0, 985.59906, 0, 994.39905, 0, 1003.19904, 0, 1011.999, 0, 1020.799, 0, 1029.599, 0, 1038.399, 0, 1047.1991, 0, 1055.9991, 0, 1064.7992, 0, 1073.5992, 0, 1082.3993, 0, 1091.1993, 0, 1099.9994, 0, 1108.7994, 0, 1117.5995, 0, 1126.3995, 0, 1135.1996, 0, 1143.9996, 0, 1152.7997, 0, 1161.5997, 0, 1170.3998, 0, 1179.1998, 0, 1187.9999, 0, 1196.7999, 0, 1205.6, 0, 1214.4, 0, 1223.2001, 0, 1232.0001, 0, 1240.8002, 0, 1249.6002, 0, 1258.4003, 0, 1267.2003, 0, 1276.0004, 0, 1284.8004, 0, 1293.6005, 0, 1302.4005, 0, 1311.2006, 0, 1320.0006, 0, 1328.8007, 0, 1337.6007, 0, 1346.4008, 0, 1355.2008, 0, 1364.0009, 0, 1372.8009, 0, 1381.601, 0, 1390.401, 0, 1399.201, 0, 1408.0011, 0, 1416.8011, 0, 1425.6012, 0, 1434.4012, 0, 1443.2013, 0, 1452.0013, 0, 1460.8014, 0, 1469.6014, 0, 1478.4015, 0, 1487.2015, 0, 1496.0016, 0, 1504.8016, 0, 1513.6017, 0, 1522.4017, 0, 1531.2018, 0, 1540.0018, 0, 1548.8019, 0, 1557.6019, 0, 1566.402, 0, 1575.202, 0, 1584.0021, 0, 1592.8021, 0, 1601.6022, 0, 1610.4022, 0, 1619.2023, 0, 1628.0023, 0, 1636.8024, 0, 1645.6024, 0, 1654.4025, 0, 1663.2025, 0, 1672.0026, 0, 1680.8026, 0, 1689.6027, 0, 1698.4027, 0, 1707.2028, 0, 1716.0028, 0, 1724.8029, 0, 1733.6029, 0, 1742.403, 0, 1751.203, 0, 1760, 0)
+prev_points = PackedVector2Array(0, 0, 8.8, 0, 17.6, 0, 26.400002, 0, 35.2, 0, 44, 0, 52.8, 0, 61.6, 0, 70.4, 0, 79.200005, 0, 88.00001, 0, 96.80001, 0, 105.60001, 0, 114.400024, 0, 123.20001, 0, 132.00002, 0, 140.80002, 0, 149.60002, 0, 158.40002, 0, 167.20003, 0, 176.00003, 0, 184.80003, 0, 193.60004, 0, 202.40004, 0, 211.20004, 0, 220.00005, 0, 228.80005, 0, 237.60007, 0, 246.40005, 0, 255.20004, 0, 264.00006, 0, 272.80005, 0, 281.60004, 0, 290.40002, 0, 299.2, 0, 308, 0, 316.8, 0, 325.59998, 0, 334.39996, 0, 343.19995, 0, 351.99994, 0, 360.79993, 0, 369.5999, 0, 378.3999, 0, 387.1999, 0, 395.99988, 0, 404.79987, 0, 413.59985, 0, 422.39984, 0, 431.19983, 0, 439.99982, 0, 448.79977, 0, 457.59976, 0, 466.39978, 0, 475.19977, 0, 483.99976, 0, 492.79974, 0, 501.59973, 0, 510.39972, 0, 519.1997, 0, 527.9997, 0, 536.7997, 0, 545.5997, 0, 554.39966, 0, 563.19965, 0, 571.99963, 0, 580.7996, 0, 589.5996, 0, 598.3996, 0, 607.1996, 0, 615.9996, 0, 624.79956, 0, 633.59955, 0, 642.39954, 0, 651.1995, 0, 659.9995, 0, 668.7995, 0, 677.5995, 0, 686.3995, 0, 695.19946, 0, 703.99945, 0, 712.79944, 0, 721.5994, 0, 730.3994, 0, 739.1994, 0, 747.9994, 0, 756.7994, 0, 765.59937, 0, 774.39935, 0, 783.19934, 0, 791.9993, 0, 800.7993, 0, 809.5993, 0, 818.3993, 0, 827.1993, 0, 835.99927, 0, 844.79926, 0, 853.59924, 0, 862.39923, 0, 871.1992, 0, 879.9992, 0, 888.79913, 0, 897.5991, 0, 906.3991, 0, 915.1991, 0, 923.99915, 0, 932.79913, 0, 941.5991, 0, 950.3991, 0, 959.1991, 0, 967.9991, 0, 976.7991, 0, 985.59906, 0, 994.39905, 0, 1003.19904, 0, 1011.999, 0, 1020.799, 0, 1029.599, 0, 1038.399, 0, 1047.1991, 0, 1055.9991, 0, 1064.7992, 0, 1073.5992, 0, 1082.3993, 0, 1091.1993, 0, 1099.9994, 0, 1108.7994, 0, 1117.5995, 0, 1126.3995, 0, 1135.1996, 0, 1143.9996, 0, 1152.7997, 0, 1161.5997, 0, 1170.3998, 0, 1179.1998, 0, 1187.9999, 0, 1196.7999, 0, 1205.6, 0, 1214.4, 0, 1223.2001, 0, 1232.0001, 0, 1240.8002, 0, 1249.6002, 0, 1258.4003, 0, 1267.2003, 0, 1276.0004, 0, 1284.8004, 0, 1293.6005, 0, 1302.4005, 0, 1311.2006, 0, 1320.0006, 0, 1328.8007, 0, 1337.6007, 0, 1346.4008, 0, 1355.2008, 0, 1364.0009, 0, 1372.8009, 0, 1381.601, 0, 1390.401, 0, 1399.201, 0, 1408.0011, 0, 1416.8011, 0, 1425.6012, 0, 1434.4012, 0, 1443.2013, 0, 1452.0013, 0, 1460.8014, 0, 1469.6014, 0, 1478.4015, 0, 1487.2015, 0, 1496.0016, 0, 1504.8016, 0, 1513.6017, 0, 1522.4017, 0, 1531.2018, 0, 1540.0018, 0, 1548.8019, 0, 1557.6019, 0, 1566.402, 0, 1575.202, 0, 1584.0021, 0, 1592.8021, 0, 1601.6022, 0, 1610.4022, 0, 1619.2023, 0, 1628.0023, 0, 1636.8024, 0, 1645.6024, 0, 1654.4025, 0, 1663.2025, 0, 1672.0026, 0, 1680.8026, 0, 1689.6027, 0, 1698.4027, 0, 1707.2028, 0, 1716.0028, 0, 1724.8029, 0, 1733.6029, 0, 1742.403, 0, 1751.203, 0, 1760, 0)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_jf5bx"]
+shader = ExtResource("4_bsuts")
+shader_parameter/rope_color1 = Color(0.533, 0.325, 0.122, 1)
+shader_parameter/rope_color2 = Color(0.933, 0.635, 0.357, 1)
+shader_parameter/outline_color = Color(0, 0, 0, 1)
+shader_parameter/outline_width = 0.1
+shader_parameter/stripe_width = 0.3
+shader_parameter/repeat = 1.0
+
+[node name="e10-custom_render_module" type="Node2D" unique_id=1862284249]
+
+[node name="DevTools" parent="." unique_id=1078064928 node_paths=PackedStringArray("nodes_mouse_left", "nodes_mouse_right", "debug_ropes") instance=ExtResource("1_erle5")]
+nodes_mouse_left = [NodePath("../Anchor1")]
+nodes_mouse_right = [NodePath("../Anchor2")]
+debug_ropes = [NodePath("../CRope2D")]
+
+[node name="Walls" parent="." unique_id=1111928691 instance=ExtResource("2_ysm16")]
+
+[node name="Obstacle" parent="." unique_id=1866753442 instance=ExtResource("3_jjy6d")]
+position = Vector2(1293, 917)
+radius = 80.0
+
+[node name="Boulder" parent="." unique_id=1194396977 instance=ExtResource("3_486oo")]
+position = Vector2(1530, 735)
+gravity_scale = 0.0
+boulder_seed = 14401720
+
+[node name="Anchor1" type="Node2D" parent="." unique_id=1977267941]
+position = Vector2(80, 80)
+
+[node name="Anchor2" type="Node2D" parent="." unique_id=1981806338]
+position = Vector2(1840, 80)
+
+[node name="CRope2D" type="CRope2D" parent="." unique_id=1567077168]
+rope_path = PackedVector2Array(0, 0, 1760, 0)
+segment_count = 200
+segment_scale = 2.2
+collision_width = 20.0
+anchors = Array[CRopeAnchor]([SubResource("CRopeAnchor_lmlp1"), SubResource("CRopeAnchor_lvni1")])
+force_modules = Array[CRopeForceMod]([SubResource("CRopeWorldGravityForceMod_u8fse")])
+line_modules = Array[CRopeLineMod]([SubResource("CRopeSmoothLineMod_8chim"), SubResource("CRopeSimplifyLineMod_5tiu1")])
+render_modules = Array[CRopeRenderMod]([SubResource("CRopeDirectRenderMod_so3ii"), SubResource("CRopeDebugRenderMod_tkmbw")])
+data = SubResource("CRopeData_jyku3")
+material = SubResource("ShaderMaterial_jf5bx")
+position = Vector2(80, 80)

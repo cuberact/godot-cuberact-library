@@ -5,36 +5,36 @@ friction = 0.1
 bounce = 0.1
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_vy854"]
-size = Vector2(300, 2600)
+size = Vector2(300, 1680)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_sgy8y"]
-size = Vector2(300, 2600)
+size = Vector2(300, 1680)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_jcqat"]
-size = Vector2(2600, 300)
+size = Vector2(2520, 300)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ukpmf"]
-size = Vector2(2600, 300)
+size = Vector2(2520, 300)
 
 [node name="Walls" type="StaticBody2D" unique_id=1111928691 groups=["no_drag"]]
 physics_material_override = SubResource("PhysicsMaterial_e52fj")
 
 [node name="Left" type="CollisionShape2D" parent="." unique_id=1326673396]
-position = Vector2(-150, 1000)
+position = Vector2(-151, 540)
 shape = SubResource("RectangleShape2D_vy854")
 
 [node name="Right" type="CollisionShape2D" parent="." unique_id=1475175514]
-position = Vector2(2150, 1000)
+position = Vector2(2071, 540)
 shape = SubResource("RectangleShape2D_sgy8y")
 
 [node name="Top" type="CollisionShape2D" parent="." unique_id=1198046647]
-position = Vector2(1000, -150)
+position = Vector2(960, -151)
 shape = SubResource("RectangleShape2D_jcqat")
 
 [node name="Bottom" type="CollisionShape2D" parent="." unique_id=713590710]
-position = Vector2(1000, 2150)
+position = Vector2(960, 1231)
 shape = SubResource("RectangleShape2D_ukpmf")
 
 [node name="Visual" type="Polygon2D" parent="." unique_id=691751640]
 color = Color(0.20879614, 0.27770624, 0.4394121, 1)
-polygon = PackedVector2Array(-300, -300, 2300, -300, 2300, 2300, -300, 2300, -300, -300, 0, 0, 0, 2000, 2000, 2000, 2000, 0, 0, 0)
+polygon = PackedVector2Array(-300, -300, 2220, -300, 2220, 1380, -300, 1380, -300, -300, -1, -1, -1, 1081, 1921, 1081, 1921, -1, -1, -1)

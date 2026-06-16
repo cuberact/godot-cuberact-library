@@ -1,0 +1,26 @@
+[gd_scene format=3 uid="uid://y05vcpihrmvr"]
+
+[ext_resource type="PackedScene" uid="uid://dh6eeqh1j2w0c" path="res://cuberact-library-examples/commons/dev_tools.tscn" id="1_dev"]
+[ext_resource type="PackedScene" uid="uid://t78dg20gevgr" path="res://cuberact-library-examples/commons/walls.tscn" id="2_walls"]
+[ext_resource type="Script" uid="uid://dwq8f8avmrag8" path="res://cuberact-library-examples/CRope2D/scripts/growing_sunflowers.gd" id="3_script"]
+
+[node name="e03-growing_sunflowers" type="Node2D" unique_id=670850772]
+script = ExtResource("3_script")
+
+[node name="Sky" type="Polygon2D" parent="." unique_id=1401606458]
+polygon = PackedVector2Array(-20, -20, 1940, -20, 1940, 1100, -20, 1100)
+vertex_colors = PackedColorArray(0.08, 0.09, 0.22, 1, 0.08, 0.09, 0.22, 1, 0.4, 0.26, 0.3, 1, 0.4, 0.26, 0.3, 1)
+
+[node name="Soil" type="Polygon2D" parent="." unique_id=901346043]
+color = Color(0.14, 0.1, 0.08, 1)
+polygon = PackedVector2Array(-20, 1020, 1940, 1020, 1940, 1100, -20, 1100)
+
+[node name="DevTools" parent="." unique_id=1743728923 node_paths=PackedStringArray("nodes_mouse_left") instance=ExtResource("1_dev")]
+nodes_mouse_left = [NodePath("../Sun")]
+nodes_draw_circles = false
+
+[node name="Walls" parent="." unique_id=2079205308 instance=ExtResource("2_walls")]
+
+[node name="Sun" type="Node2D" parent="." unique_id=1058141494]
+position = Vector2(1550, 189)
+scale = Vector2(0.54, 0.54)

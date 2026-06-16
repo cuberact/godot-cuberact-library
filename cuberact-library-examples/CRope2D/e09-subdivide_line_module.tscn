@@ -1,0 +1,122 @@
+[gd_scene format=3 uid="uid://b77lkaxgng5ee"]
+
+[ext_resource type="PackedScene" uid="uid://dh6eeqh1j2w0c" path="res://cuberact-library-examples/commons/dev_tools.tscn" id="1_cn72g"]
+[ext_resource type="PackedScene" uid="uid://t78dg20gevgr" path="res://cuberact-library-examples/commons/walls.tscn" id="2_3j8wc"]
+[ext_resource type="PackedScene" uid="uid://c3acsyrmmguwe" path="res://cuberact-library-examples/commons/obstacle.tscn" id="3_47nsh"]
+[ext_resource type="PackedScene" uid="uid://bot73vrq55x85" path="res://cuberact-library-examples/commons/boulder.tscn" id="4_o2a0b"]
+
+[sub_resource type="CRopeAnchor" id="CRopeAnchor_t8q6m"]
+node_path = NodePath("../Anchor1")
+
+[sub_resource type="CRopeWorldGravityForceMod" id="CRopeWorldGravityForceMod_dbsnc"]
+
+[sub_resource type="CRopeDirectRenderMod" id="CRopeDirectRenderMod_udi4l"]
+width = 20.0
+
+[sub_resource type="CRopeDebugRenderMod" id="CRopeDebugRenderMod_coslu"]
+draw_overlay = false
+anchor_radius = 20.0
+draw_collision_width = true
+collision_width_color = Color(1, 1, 1, 1)
+point_size = 13.0
+draw_render_points = false
+
+[sub_resource type="CRopeData" id="CRopeData_d4q0d"]
+segment_length = 180.0
+compression_limit = 1.0
+points = PackedVector2Array(0, 0, 0, 180, 0, 360, 0, 540, 0, 720, 0, 900)
+prev_points = PackedVector2Array(0, 0, 0, 180, 0, 360, 0, 540, 0, 720, 0, 900)
+
+[sub_resource type="CRopeAnchor" id="CRopeAnchor_4jn0h"]
+node_path = NodePath("../Anchor2")
+
+[sub_resource type="CRopeWorldGravityForceMod" id="CRopeWorldGravityForceMod_ik4dc"]
+
+[sub_resource type="CRopeSubdivideLineMod" id="CRopeSubdivideLineMod_ipamy"]
+iterations = 3
+
+[sub_resource type="CRopeDirectRenderMod" id="CRopeDirectRenderMod_o7axl"]
+width = 20.0
+
+[sub_resource type="CRopeDebugRenderMod" id="CRopeDebugRenderMod_816gj"]
+draw_overlay = false
+anchor_radius = 20.0
+draw_collision_width = true
+collision_width_color = Color(1, 1, 1, 1)
+point_size = 13.0
+
+[sub_resource type="CRopeData" id="CRopeData_dgyu0"]
+segment_length = 180.0
+compression_limit = 1.0
+points = PackedVector2Array(0, 0, 0, 180, 0, 360, 0, 540, 0, 720, 0, 900)
+prev_points = PackedVector2Array(0, 0, 0, 180, 0, 360, 0, 540, 0, 720, 0, 900)
+
+[node name="e09-subdivide_line_module" type="Node2D" unique_id=528624931]
+
+[node name="DevTools" parent="." unique_id=1078064928 node_paths=PackedStringArray("nodes_mouse_left", "nodes_mouse_right", "debug_ropes") instance=ExtResource("1_cn72g")]
+nodes_mouse_left = [NodePath("../Anchor1")]
+nodes_mouse_right = [NodePath("../Anchor2")]
+debug_ropes = [NodePath("../CRope2D_2")]
+
+[node name="Walls" parent="." unique_id=1111928691 instance=ExtResource("2_3j8wc")]
+
+[node name="Obstacle" parent="." unique_id=1866753442 instance=ExtResource("3_47nsh")]
+position = Vector2(1001, 864)
+radius = 80.0
+rect_size = Vector2(500, 200)
+
+[node name="Boulder" parent="." unique_id=1194396977 instance=ExtResource("4_o2a0b")]
+position = Vector2(1171, 864)
+gravity_scale = 0.0
+boulder_seed = 1865064585
+
+[node name="Anchor1" type="Node2D" parent="." unique_id=675993158]
+position = Vector2(400, 80)
+
+[node name="lblOff" type="Label" parent="Anchor1" unique_id=1083205853]
+offset_left = -17.0
+offset_top = -55.0
+offset_right = 283.0
+offset_bottom = 26.0
+theme_override_font_sizes/font_size = 28
+text = "OFF"
+
+[node name="Anchor2" type="Node2D" parent="." unique_id=1087882972]
+position = Vector2(1600, 80)
+
+[node name="lblOn" type="Label" parent="Anchor2" unique_id=190265992]
+offset_left = -19.0
+offset_top = -58.0
+offset_right = 238.0
+offset_bottom = 23.0
+theme_override_font_sizes/font_size = 28
+text = "ON"
+
+[node name="CRope2D_1" type="CRope2D" parent="." unique_id=549483749]
+rope_path = PackedVector2Array(0, 0, 0, 900)
+segment_count = 5
+collision_width = 20.0
+anchors = Array[CRopeAnchor]([SubResource("CRopeAnchor_t8q6m")])
+force_modules = Array[CRopeForceMod]([SubResource("CRopeWorldGravityForceMod_dbsnc")])
+render_modules = Array[CRopeRenderMod]([SubResource("CRopeDirectRenderMod_udi4l"), SubResource("CRopeDebugRenderMod_coslu")])
+data = SubResource("CRopeData_d4q0d")
+position = Vector2(400, 80)
+
+[node name="CRope2D_2" type="CRope2D" parent="." unique_id=186870905]
+rope_path = PackedVector2Array(0, 0, 0, 900)
+segment_count = 5
+collision_width = 20.0
+anchors = Array[CRopeAnchor]([SubResource("CRopeAnchor_4jn0h")])
+force_modules = Array[CRopeForceMod]([SubResource("CRopeWorldGravityForceMod_ik4dc")])
+line_modules = Array[CRopeLineMod]([SubResource("CRopeSubdivideLineMod_ipamy")])
+render_modules = Array[CRopeRenderMod]([SubResource("CRopeDirectRenderMod_o7axl"), SubResource("CRopeDebugRenderMod_816gj")])
+data = SubResource("CRopeData_dgyu0")
+position = Vector2(1600, 80)
+
+[node name="lblSubdivide" type="Label" parent="." unique_id=610415461]
+offset_left = 20.0
+offset_top = 10.0
+offset_right = 388.0
+offset_bottom = 66.0
+theme_override_font_sizes/font_size = 28
+text = "SUBDIVIDE"

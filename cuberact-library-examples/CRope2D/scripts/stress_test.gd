@@ -1,13 +1,13 @@
 extends Node2D
-## Spawns N ropes hanging from the ceiling with varying lengths and pastel colors.
-## Shows a configuration panel on start so the user can adjust parameters before spawning.
+## Stress test. Spawns N ropes hanging from the ceiling with varying lengths and
+## pastel colors. A config panel on start lets you set the rope count before spawning.
 
-static var _last_rope_count: int = 30
+static var _last_rope_count: int = 100
 
 @export var rope_count: int = _last_rope_count
 @export var rope_width: float = 20.0
-@export var rope_min_length: float = 1200.0
-@export var rope_max_length: float = 1700.0
+@export var rope_min_length: float = 750.0
+@export var rope_max_length: float = 950.0
 
 var _rope_shader: Shader
 var _walls: Node2D
@@ -25,26 +25,22 @@ func _show_config_panel() -> void:
 	_config_layer = CanvasLayer.new()
 	add_child(_config_layer)
 
-	# Dark background overlay
 	var bg := ColorRect.new()
 	bg.color = Color(0, 0, 0, 0.75)
 	bg.set_anchors_preset(Control.PRESET_FULL_RECT)
 	bg.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_config_layer.add_child(bg)
 
-	# Center everything
 	var center := CenterContainer.new()
 	center.set_anchors_preset(Control.PRESET_FULL_RECT)
 	center.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_config_layer.add_child(center)
 
-	# Main container
 	var vbox := VBoxContainer.new()
 	vbox.add_theme_constant_override("separation", 24)
 	vbox.alignment = BoxContainer.ALIGNMENT_CENTER
 	center.add_child(vbox)
 
-	# Title
 	var title := Label.new()
 	title.text = name
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -54,7 +50,6 @@ func _show_config_panel() -> void:
 
 	vbox.add_child(HSeparator.new())
 
-	# Rope count label
 	var count_label := Label.new()
 	count_label.text = "Ropes"
 	count_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -62,7 +57,6 @@ func _show_config_panel() -> void:
 	count_label.add_theme_color_override("font_color", Color(0.7, 0.8, 1.0))
 	vbox.add_child(count_label)
 
-	# Value display
 	var value_label := Label.new()
 	value_label.text = str(rope_count)
 	value_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -70,7 +64,6 @@ func _show_config_panel() -> void:
 	value_label.add_theme_color_override("font_color", Color(0.98, 0.98, 0.98))
 	vbox.add_child(value_label)
 
-	# Slider
 	var slider := HSlider.new()
 	slider.min_value = 1
 	slider.max_value = 200
@@ -85,7 +78,6 @@ func _show_config_panel() -> void:
 
 	vbox.add_child(HSeparator.new())
 
-	# START button
 	var start_btn := Button.new()
 	start_btn.text = "START"
 	start_btn.add_theme_font_size_override("font_size", 40)
@@ -113,9 +105,9 @@ func _show_config_panel() -> void:
 	)
 
 func _spawn_ropes() -> void:
-	var center_x := 1000.0
-	var margin := 200.0
-	var max_span := 2000.0 - 2.0 * margin
+	var center_x := 960.0
+	var margin := 100.0
+	var max_span := 1920.0 - 2.0 * margin
 	var rope_spacing := max_span / 100.0
 	for i in rope_count:
 		var x: float
@@ -127,47 +119,42 @@ func _spawn_ropes() -> void:
 			x = center_x - span / 2.0 + t * span
 		var length := lerpf(rope_min_length, rope_max_length, randf())
 		var seg_count := int(length / rope_width)
-		var start := Vector2(x, 0.0)
-		# Rope
+		var start := Vector2(x, 4.0)
 		var rope := _create_rope(start, seg_count)
 		rope.name = "Rope_%d" % i
 		add_child(rope)
-		# Anchor to Walls — offset places anchor at (x, 0), inside the wall;
-		# depenetrate will push it just below the wall surface
+		# Anchor the rope top to the Walls node at (x, 0)
 		var anchor := CRopeAnchor.new()
 		anchor.index = 0
 		anchor.node_path = rope.get_path_to(_walls)
 		anchor.offset_angle = rad_to_deg(atan2(start.y, start.x))
 		anchor.offset_distance = start.length()
 		anchor.collision_resolve = false
-		anchor.enabled = true
 		rope.anchors = [anchor]
-		#rope.depenetrate_all_anchor_offsets()
 		if _dev_tools:
 			_dev_tools.register_debug_rope(rope)
 
 func _create_rope(start: Vector2, seg_count: int) -> CRope2D:
-	# Data
-	var rope_data := CRopeData.new()
+	var data := CRopeData.new()
 	var end := start + Vector2(0.0, seg_count * rope_width)
-	rope_data.create_line_by_count(start, end, seg_count)
-	# Rope
+	data.create_line_by_count(start, end, seg_count)
+	# Pre-shrink segments so gravity stretch settles near the target length
+	data.segment_length *= 0.99
 	var rope := CRope2D.new()
-	rope.data = rope_data
+	rope.data = data
 	rope.collision_width = rope_width
-	# Force modules
-	var gravity := CRopeGravityForceMod.new()
-	gravity.gravity = Vector2(0.0, 980.0)
-	rope.force_modules = [gravity]
-	# Line modules
-	var smooth := CRopeSmoothLineMod.new()
-	var simplify := CRopeSimplifyLineMod.new()
-	rope.line_modules = [smooth, simplify]
-	# Render module
+	rope.force_modules = [CRopeWorldGravityForceMod.new()]
+	rope.line_modules = [CRopeSmoothLineMod.new(), CRopeSimplifyLineMod.new()]
 	var renderer := CRopeDirectRenderMod.new()
 	renderer.width = rope_width
-	rope.render_modules = [renderer]
-	# Material with random pastel colors
+	renderer.joint_mode = Line2D.LINE_JOINT_SHARP
+	renderer.begin_cap_mode = Line2D.LINE_CAP_NONE
+	renderer.end_cap_mode = Line2D.LINE_CAP_NONE
+	var debug_renderer := CRopeDebugRenderMod.new()
+	debug_renderer.set_all_draws(false)
+	debug_renderer.draw_overlay = true
+	debug_renderer.wake_color = Color.from_rgba8(0, 0, 0, 0)
+	rope.render_modules = [renderer, debug_renderer]
 	var mat := ShaderMaterial.new()
 	mat.shader = _rope_shader
 	var base_color := _generate_random_pastel()

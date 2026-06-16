@@ -25,16 +25,16 @@ func randomize_boulder() -> void:
 
 func generate_boulder() -> void:
 	rng.seed = boulder_seed
-	var radius = rng.randf_range(80.0, 100.0)
+	var radius := rng.randf_range(40.0, 60.0)
 	var points := PackedVector2Array()
-	var angle = 0.0;
-	var threshold = rng.randf_range(30.0, 80.0)
+	var angle := 0.0
+	var threshold := rng.randf_range(30.0, 80.0)
 	points.append(Vector2(1.0, 0.0) * radius)
 	for i in 1000:
 		angle += rng.randf_range(5.0, threshold)
 		if angle > 358.0:
 			break
-		var a = deg_to_rad(angle)
+		var a := deg_to_rad(angle)
 		points.append(Vector2(cos(a), sin(a)) * radius)
 	points.append(points[0])
 	collision_polygon.polygon = points

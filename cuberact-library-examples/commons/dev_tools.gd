@@ -22,8 +22,8 @@ const _PROBE_META := [
 ]
 
 @export_group("Camera")
-@export var init_pos: Vector2 = Vector2(1000.0, 1000.0)
-@export var init_zoom: float = 0.98
+@export var init_pos: Vector2 = Vector2(960.0, 540.0)
+@export var init_zoom: float = 1.0
 @export_range(0.1, 0.9, 0.01) var min_zoom: float = 0.2
 @export_range(1, 100, 0.1) var max_zoom: float = 100.0
 @export_range(1.01, 2, 0.01) var zoom_speed: float = 1.04
@@ -84,6 +84,7 @@ var _probe_panel: PanelContainer
 var _hint_panel: PanelContainer
 var _debug_ui_visible: bool = false
 var _controls_visible: bool = false
+static var _hint_enabled: bool = true
 var _extra_controls: Array = []
 static var _controls_printed: bool = false
 
@@ -235,7 +236,7 @@ func _handle_keyboard(event: InputEventKey) -> void:
 	if event.pressed and event.keycode == KEY_F1:
 		_controls_visible = not _controls_visible
 		controls_overlay.visible = _controls_visible
-		_hint_panel.visible = not _controls_visible
+		_hint_panel.visible = _hint_enabled and not _controls_visible
 	elif event.pressed and event.keycode == KEY_F2:
 		debug_container.visible = not debug_container.visible
 		_debug_ui_visible = not _debug_ui_visible
@@ -251,6 +252,11 @@ func _handle_keyboard(event: InputEventKey) -> void:
 				rope.disable_debug_probe()
 		if _debug_ui_visible:
 			physics_frame_counter = 0
+	elif event.pressed and event.keycode == KEY_F12:
+		_hint_enabled = not _hint_enabled
+		_hint_panel.visible = _hint_enabled and not _controls_visible
+	elif event.pressed and event.keycode == KEY_F10:
+		_save_screenshot()
 	elif event.pressed and event.keycode == KEY_V:
 		if OS.get_name() != "Web":
 			_toggle_vsync()
@@ -258,7 +264,7 @@ func _handle_keyboard(event: InputEventKey) -> void:
 		if _controls_visible:
 			_controls_visible = false
 			controls_overlay.visible = false
-			_hint_panel.visible = true
+			_hint_panel.visible = _hint_enabled
 		else:
 			get_tree().change_scene_to_file("res://cuberact-library-examples/examples-launcher.tscn")
 	elif event.keycode == KEY_R:
@@ -324,6 +330,8 @@ func _rebuild_controls_overlay() -> void:
 	var system_color := Color(0.6, 0.6, 0.65)
 	_add_control_row("F1", "show/hide controls", system_color)
 	_add_control_row("F2", "show/hide FPS and debug", system_color)
+	_add_control_row("F10", "save screenshot", system_color)
+	_add_control_row("F12", "show/hide hint", system_color)
 	_add_control_row("ESC", "back to launcher", system_color)
 
 ## Adds a single key-description row to the controls grid.
@@ -377,6 +385,8 @@ func _get_controls_entries() -> Array:
 	entries.append_array(_extra_controls)
 	entries.append(["F1", "show/hide controls"])
 	entries.append(["F2", "show/hide FPS and debug"])
+	entries.append(["F10", "save screenshot"])
+	entries.append(["F12", "show/hide hint"])
 	entries.append(["ESC", "back to launcher"])
 	return entries
 
@@ -458,8 +468,8 @@ func _setup_hint() -> void:
 	_hint_panel.anchor_top = 1.0
 	_hint_panel.anchor_right = 1.0
 	_hint_panel.anchor_bottom = 1.0
-	_hint_panel.offset_right = -20
-	_hint_panel.offset_bottom = -20
+	_hint_panel.offset_right = 0
+	_hint_panel.offset_bottom = 0
 	_hint_panel.grow_horizontal = Control.GROW_DIRECTION_BEGIN
 	_hint_panel.grow_vertical = Control.GROW_DIRECTION_BEGIN
 	# Reparent hint label into panel
@@ -473,6 +483,8 @@ func _setup_hint() -> void:
 	hint_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	# Keep behind controls overlay
 	$CanvasLayer.move_child(_hint_panel, controls_overlay.get_index())
+	# Apply the global F12 toggle (persists across examples until app restart)
+	_hint_panel.visible = _hint_enabled
 
 ## Creates a PanelContainer with background for the FPS/VSync info grid.
 func _setup_debug_panel() -> void:
@@ -519,8 +531,8 @@ func _create_debug_probe_panel() -> void:
 	_probe_panel.anchor_top = 1
 	_probe_panel.anchor_right = 0
 	_probe_panel.anchor_bottom = 1
-	_probe_panel.offset_left = 20
-	_probe_panel.offset_bottom = -20
+	_probe_panel.offset_left = 0
+	_probe_panel.offset_bottom = 0
 	_probe_panel.grow_vertical = Control.GROW_DIRECTION_BEGIN
 	_probe_panel.grow_horizontal = Control.GROW_DIRECTION_END
 	# Content container
@@ -541,7 +553,7 @@ func _create_debug_probe_panel() -> void:
 	_debug_probe_container.add_child(grid)
 	for i in _PROBE_META.size():
 		var meta = _PROBE_META[i]
-		# First entry ("simulate") is the total — use bright color to distinguish from sub-items
+		# First entry ("simulate") is the total, use bright color to distinguish from sub-items
 		var kc: Color = val_color if i == 0 else key_color
 		var k := _create_info_label(meta[0], kc, fs, HORIZONTAL_ALIGNMENT_RIGHT)
 		grid.add_child(k)
@@ -670,6 +682,21 @@ func _reset_camera() -> void:
 	camera.global_position = init_pos
 	camera.zoom = Vector2(init_zoom, init_zoom)
 
+## Saves a PNG of the current frame into the screenshot folder, named after the running scene.
+## A numeric suffix is appended when a file with that name already exists.
+func _save_screenshot() -> void:
+	await RenderingServer.frame_post_draw
+	var image := get_viewport().get_texture().get_image()
+	var dir := "res://cuberact-library-examples/CRope2D/screenshot"
+	var base: String = get_tree().current_scene.scene_file_path.get_file().get_basename()
+	var path := "%s/%s.png" % [dir, base]
+	var n := 1
+	while FileAccess.file_exists(path):
+		path = "%s/%s_%d.png" % [dir, base, n]
+		n += 1
+	image.save_png(path)
+	print("Screenshot saved: ", ProjectSettings.globalize_path(path))
+
 func _update_debug_probe_display() -> void:
 	if debug_probes.is_empty():
 		_probe_panel.visible = false
@@ -716,20 +743,22 @@ func _build_probe_text() -> String:
 	return "\n".join(lines)
 
 static var _window_initialized: bool = false
-const WINDOW_TARGET_SIZE := 2000
-const WINDOW_MARGIN := 0.9
+const DESIGN_WIDTH := 1920
+const DESIGN_HEIGHT := 1080
+const WINDOW_MARGIN := 0.95
 
 static func window_setup() -> void:
 	if _window_initialized:
 		return
 	_window_initialized = true
 	var usable := DisplayServer.screen_get_usable_rect()
-	var screen_scale := DisplayServer.screen_get_scale()
-	var needed := int(WINDOW_TARGET_SIZE / screen_scale)
-	var available := int(mini(usable.size.x, usable.size.y) * WINDOW_MARGIN)
-	if needed <= available:
-		return
-	DisplayServer.window_set_size(Vector2i(available, available))
+	var max_w := usable.size.x * WINDOW_MARGIN
+	var max_h := usable.size.y * WINDOW_MARGIN
+	# Largest 16:9 box that fits the usable screen, capped at the design size.
+	var scale := minf(minf(DESIGN_WIDTH, max_w) / DESIGN_WIDTH, minf(DESIGN_HEIGHT, max_h) / DESIGN_HEIGHT)
+	var w := int(DESIGN_WIDTH * scale)
+	var h := int(DESIGN_HEIGHT * scale)
+	DisplayServer.window_set_size(Vector2i(w, h))
 	@warning_ignore("integer_division")
-	var pos: Vector2i = usable.position + (usable.size - Vector2i(available, available)) / 2
+	var pos: Vector2i = usable.position + (usable.size - Vector2i(w, h)) / 2
 	DisplayServer.window_set_position(pos)
